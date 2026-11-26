@@ -27,7 +27,7 @@
 <section id="v-code" class="hidden" style="display:flex;flex-direction:column;gap:18px">
 <div class="kick"><i></i>Request for clearance</div>
 <h1>RSVP</h1>
-<p class="para">Please use the personal link from your save-the-date email — it takes you straight to your reservation. You can also type the reservation code from that email here.</p>
+<p class="para">Please use the personal link from your save-the-date email. It takes you straight to your reservation. You can also type the reservation code from that email here.</p>
 <form id="codeForm" novalidate>
 <label for="codeIn">Reservation code</label>
 <div class="codebox"><input id="codeIn" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="16" placeholder="Your code"><button class="btn" type="submit" id="codeBtn">Find</button></div>
@@ -107,7 +107,7 @@
     if (multi && parts.every(function(p){ return p[p.length-1] === last; })) return joinAnd(parts.map(function(p){ return p.slice(0,-1).join(' '); })) + ' ' + last;
     return joinAnd(names);
   }
-  function label(a){ return a==='Yes' ? 'Wheels down — coming' : a==='No' ? 'Unable — sending love' : 'Waiting for a reply'; }
+  function label(a){ return a==='Yes' ? 'Wheels down: coming' : a==='No' ? 'Unable: sending love' : 'Waiting for a reply'; }
   function disp(m){ return m.name==='Guest' ? 'Your guest' : m.name; }
 
   function api(method, body){
@@ -180,7 +180,7 @@
         } else {
           var la=el('label',null,'Where should we mail '+first+'’s invite? (optional)'), ta=el('textarea');
           ta.name='sep_'+m.id; ta.rows=2; ta.maxLength=300; ta.setAttribute('autocomplete','off');
-          ta.placeholder = m.hasOwnAddr ? 'On file — only fill in if it changed' : 'Only if '+first+' lives somewhere else';
+          ta.placeholder = m.hasOwnAddr ? 'On file. Only fill in if it changed' : 'Only if '+first+' lives somewhere else';
           ta.value = picks['a_'+m.id] || '';
           ta.addEventListener('input', function(){ picks['a_'+m.id]=ta.value; });
           la.appendChild(ta); card.appendChild(la);
