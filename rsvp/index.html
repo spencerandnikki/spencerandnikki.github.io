@@ -48,7 +48,7 @@
 <div class="seats"><span class="lbl">Seats</span><span class="v" id="seatCount"></span></div>
 </div>
 <div id="repliedNote" class="note hidden"></div>
-<p class="para">Reply for yourself, or for everyone on this reservation. Please reply by February 1, 2027.</p>
+<p class="para">Reply for yourself, or for everyone on this reservation.</p>
 <form id="rsvpForm" novalidate autocomplete="on">
 <div id="whoBox" style="display:flex;flex-direction:column;gap:8px">
 <div class="lbl">Who’s replying?</div>
@@ -79,8 +79,6 @@
 <h1 id="doneTitle">Reply received</h1>
 <p class="para" id="doneText" style="max-width:360px"></p>
 <div id="doneList" class="note" style="text-align:left;width:100%"></div>
-<p class="small" style="margin:0">You can change your reply anytime using this same link.</p>
-<button class="linkbtn" type="button" id="againBtn">Change a reply</button>
 <a class="btn ghost" href="../#travel">Travel &amp; hotel info</a>
 </div>
 </section>
@@ -154,8 +152,8 @@
       if (locked) cur = m.answer==='Yes'?'yes':'no';
       var card=el('div','p'), head=el('div');
       head.appendChild(el('div','p-name', disp(m)));
-      var sub = locked ? (m.name.split(' ')[0]+' replied for themselves, so only they can change this.')
-              : (m.own && m.id===replier ? 'Your own reply — you can change it.' : (m.answer ? 'Current reply: '+label(m.answer) : ''));
+      var sub = locked ? (m.name.split(' ')[0]+' already replied for themselves.')
+              : (m.own && m.id===replier ? 'Your own reply.' : (m.answer ? 'Current reply: '+label(m.answer) : ''));
       if (sub) head.appendChild(el('div','p-sub',sub));
       card.appendChild(head);
       var opts=el('div','opts');
@@ -201,7 +199,6 @@
     if (c.length<6){ $('codeErr').textContent='Your code is at least 6 letters and numbers.'; return; }
     $('codeErr').textContent=''; CODE=c; load();
   });
-  $('againBtn').addEventListener('click', function(){ renderForm(); go('ask'); });
   $('rsvpForm').addEventListener('input', function(){ $('err').textContent=''; });
   $('rsvpForm').addEventListener('submit', function(e){
     e.preventDefault();
