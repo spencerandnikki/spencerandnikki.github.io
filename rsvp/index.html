@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RSVP · Nikki &amp; Spencer</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#12231B">
+<link rel="icon" href="../favicon.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header class="nav">
+<div class="nav-in">
+<a class="brand" href="../">N<i>&amp;</i>S</a>
+<nav class="links" style="display:flex;position:static;flex-direction:row;background:none;border:0;padding:0"><a href="../" style="border:0;padding:0">← Wedding site</a></nav>
+</div>
+</header>
+
+<main class="rs">
+
+<!-- ===== enter code ===== -->
+<section id="v-code" class="hidden" style="display:flex;flex-direction:column;gap:18px">
+<div class="kick"><i></i>Request for clearance</div>
+<h1>RSVP</h1>
+<p class="para">Please use the personal link from your save-the-date email — it takes you straight to your reservation. You can also type the reservation code from that email here.</p>
+<form id="codeForm" novalidate>
+<label for="codeIn">Reservation code</label>
+<div class="codebox"><input id="codeIn" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="16" placeholder="Your code"><button class="btn" type="submit" id="codeBtn">Find</button></div>
+<div class="err" id="codeErr" role="alert"></div>
+</form>
+<p class="small" style="margin:0">Can’t find your email? Write to us at <a href="mailto:joinus@spencerandnikki.com">joinus@spencerandnikki.com</a> and we’ll send your link again.</p>
+</section>
+
+<!-- ===== loading ===== -->
+<section id="v-load" class="hidden"><p class="para" style="text-align:center;padding:40px 0">Checking your reservation…</p></section>
+
+<!-- ===== form ===== -->
+<section id="v-ask" class="hidden" style="flex-direction:column;gap:18px">
+<div class="kick"><i></i>Request for clearance</div>
+<h1>Can you join us on October 2, 2027?</h1>
+<div class="ticket">
+<div class="who"><span class="lbl">Passengers on this reservation</span><span class="v" id="paxNames"></span></div>
+<div class="seats"><span class="lbl">Seats</span><span class="v" id="seatCount"></span></div>
+</div>
+<div id="repliedNote" class="note hidden"></div>
+<p class="para">Reply for yourself, or for everyone on this reservation. Please reply by February 1, 2027.</p>
+<form id="rsvpForm" novalidate autocomplete="on">
+<div id="whoBox" style="display:flex;flex-direction:column;gap:8px">
+<div class="lbl">Who’s replying?</div>
+<div id="who" class="chips" role="radiogroup" aria-label="Who is replying"></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<div class="lbl">Passenger manifest</div>
+<div id="pax" style="display:flex;flex-direction:column;gap:10px"></div>
+</div>
+<div id="addrBox" class="hidden" style="flex-direction:column;gap:14px">
+<div class="lbl" style="padding-top:4px">Household mailing address</div>
+<div id="addrNote" class="note hidden">We already have your household’s mailing address. Only fill this in if it has changed.</div>
+<label for="street">Street address<input id="street" name="street" type="text" autocomplete="shipping address-line1" placeholder="Street and apt / unit" maxlength="200"></label>
+<div class="row2"><label for="city">City<input id="city" name="city" type="text" autocomplete="shipping address-level2" maxlength="80"></label><label for="state">State<input id="state" name="state" type="text" autocomplete="shipping address-level1" maxlength="40"></label></div>
+<div class="row2b"><label for="zip">ZIP<input id="zip" name="zip" type="text" autocomplete="shipping postal-code" inputmode="numeric" maxlength="20"></label><label for="phone">Phone<input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="40"></label></div>
+<label for="email">Email<input id="email" name="email" type="email" autocomplete="email" maxlength="120"></label>
+</div>
+<label>Note to the couple (optional)<textarea name="note" rows="3" maxlength="1000"></textarea></label>
+<div class="err" id="err" role="alert"></div>
+<button class="btn" type="submit" id="submitBtn">File my flight plan</button>
+</form>
+</section>
+
+<!-- ===== done ===== -->
+<section id="v-done" class="hidden" style="flex-direction:column">
+<div class="done">
+<svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28" fill="none" stroke="#C9A55A" stroke-width="2.5"/><path d="M20 33 L28 41 L44 24" fill="none" stroke="#C9A55A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<h1 id="doneTitle">Reply received</h1>
+<p class="para" id="doneText" style="max-width:360px"></p>
+<div id="doneList" class="note" style="text-align:left;width:100%"></div>
+<p class="small" style="margin:0">You can change your reply anytime using this same link.</p>
+<button class="linkbtn" type="button" id="againBtn">Change a reply</button>
+<a class="btn ghost" href="../#travel">Travel &amp; hotel info</a>
+</div>
+</section>
+</main>
+
+<script>
+(function(){
+  /* Web app URL of the RSVP script (owned by joinus@spencerandnikki.com) */
+  var API = 'https://script.google.com/macros/s/AKfycbwZW_Fsgyg5lzgpN3b44ggi_fx9slfsXWzx26KYUHyJCdIdj5MfnK4z9oKHHdFqIJ7a/exec';
+
+  var $ = function(id){ return document.getElementById(id); };
+  var qs = new URLSearchParams(location.search);
+  var CODE = (qs.get('g') || '').replace(/[^A-Za-z0-9]/g,'').toUpperCase().slice(0,16);
+  var party = null, replier = '', picks = {};
+
+  function go(v){
+    ['code','load','ask','done'].forEach(function(n){ var e=$('v-'+n); var on=n===v; e.classList.toggle('hidden',!on); if(on) e.style.display=(n==='load'?'block':'flex'); });
+    window.scrollTo(0,0);
+  }
+  function el(tag, cls, txt){ var e=document.createElement(tag); if(cls) e.className=cls; if(txt!=null) e.textContent=txt; return e; }
+  function joinAnd(a){ return a.length < 2 ? (a[0]||'') : a.slice(0,-1).join(', ') + ' & ' + a[a.length-1]; }
+  function nameLine(names){
+    var parts = names.map(function(n){ return n.trim().split(/\s+/); });
+    var multi = parts.length > 1 && parts.every(function(p){ return p.length > 1; });
+    var last = multi && parts[0][parts[0].length-1];
+    if (multi && parts.every(function(p){ return p[p.length-1] === last; })) return joinAnd(parts.map(function(p){ return p.slice(0,-1).join(' '); })) + ' ' + last;
+    return joinAnd(names);
+  }
+  function label(a){ return a==='Yes' ? 'Wheels down — coming' : a==='No' ? 'Unable — sending love' : 'Waiting for a reply'; }
+  function disp(m){ return m.name==='Guest' ? 'Your guest' : m.name; }
+
+  function api(method, body){
+    var url = API + (method==='GET' ? '?api=party&g=' + encodeURIComponent(CODE) : '');
+    var opt = method==='GET' ? {} : { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(body) };
+    return fetch(url, opt).then(function(r){ return r.json(); });
+  }
+
+  function load(){
+    go('load');
+    api('GET').then(function(p){
+      if (!p || !p.ok){ go('code'); $('codeErr').textContent='We couldn’t find that reservation. Please check the code and try again.'; return; }
+      party = p; picks = {}; replier=''; history.replaceState(null,'','?g='+CODE); renderForm(); go('ask');
+    }).catch(function(){ go('code'); $('codeErr').textContent='We couldn’t connect just now. Please try again in a moment.'; });
+  }
+
+  function renderHeader(){
+    $('paxNames').textContent = nameLine(party.members.map(function(m){ return m.name==='Guest' ? 'Guest' : m.name; }));
+    $('seatCount').textContent = party.members.length;
+    var answered = party.members.filter(function(m){ return m.answer; }), n=$('repliedNote');
+    if (answered.length){
+      n.classList.remove('hidden'); n.innerHTML=''; n.appendChild(el('b',null,'Replies so far'));
+      party.members.forEach(function(m){ n.appendChild(el('div',null, disp(m)+': '+label(m.answer))); });
+    } else n.classList.add('hidden');
+  }
+
+  function renderForm(){
+    renderHeader();
+    $('err').textContent='';
+    var people = party.members.filter(function(m){ return m.name!=='Guest'; });
+    if (people.length===1) replier = people[0].id;
+    $('whoBox').classList.toggle('hidden', people.length===1);
+    var who=$('who'); who.innerHTML='';
+    people.forEach(function(m){
+      var c=el('button','chip',m.name); c.type='button'; c.setAttribute('role','radio'); c.setAttribute('aria-checked', String(m.id===replier));
+      c.addEventListener('click', function(){ replier=m.id; renderForm(); }); who.appendChild(c);
+    });
+    var pax=$('pax'); pax.innerHTML='';
+    party.members.forEach(function(m){
+      var locked = m.own && m.id!==replier;
+      var cur = picks[m.id] || (m.answer==='Yes'?'yes':m.answer==='No'?'no':'');
+      if (locked) cur = m.answer==='Yes'?'yes':'no';
+      var card=el('div','p'), head=el('div');
+      head.appendChild(el('div','p-name', disp(m)));
+      var sub = locked ? (m.name.split(' ')[0]+' replied for themselves, so only they can change this.')
+              : (m.own && m.id===replier ? 'Your own reply — you can change it.' : (m.answer ? 'Current reply: '+label(m.answer) : ''));
+      if (sub) head.appendChild(el('div','p-sub',sub));
+      card.appendChild(head);
+      var opts=el('div','opts');
+      [['yes','Wheels down','Coming'],['no','Unable','Sending love']].forEach(function(o){
+        var b=el('button','opt '+o[0]); b.type='button'; b.setAttribute('aria-pressed', String(cur===o[0]));
+        b.appendChild(el('b',null,o[1])); b.appendChild(el('small',null,o[2]));
+        b.setAttribute('aria-label', disp(m)+': '+o[1]+', '+o[2].toLowerCase());
+        if (locked) b.disabled=true;
+        b.addEventListener('click', function(){ picks[m.id]=o[0]; renderForm(); });
+        opts.appendChild(b);
+      });
+      card.appendChild(opts);
+      if (cur==='yes' && !locked){
+        var l=el('label',null,'Name on the invitation'), i=el('input'); i.name='n_'+m.id; i.maxLength=120;
+        i.value = picks['n_'+m.id] != null ? picks['n_'+m.id] : (m.official || (m.name==='Guest' ? '' : m.name));
+        if (m.name==='Guest') i.placeholder='Your guest’s full name';
+        i.addEventListener('input', function(){ picks['n_'+m.id]=i.value; });
+        l.appendChild(i); card.appendChild(l);
+        var first = m.name==='Guest' ? 'your guest' : m.name.split(' ')[0];
+        if (!picks['x_'+m.id] && !picks['a_'+m.id]){
+          var tg=el('button','sep-toggle', m.hasOwnAddr ? 'Update where we mail '+first+'’s invite' : '+ Mail '+first+'’s invite somewhere else');
+          tg.type='button'; tg.addEventListener('click', function(){ picks['x_'+m.id]=true; renderForm(); });
+          card.appendChild(tg);
+        } else {
+          var la=el('label',null,'Where should we mail '+first+'’s invite? (optional)'), ta=el('textarea');
+          ta.name='sep_'+m.id; ta.rows=2; ta.maxLength=300; ta.setAttribute('autocomplete','off');
+          ta.placeholder = m.hasOwnAddr ? 'On file — only fill in if it changed' : 'Only if '+first+' lives somewhere else';
+          ta.value = picks['a_'+m.id] || '';
+          ta.addEventListener('input', function(){ picks['a_'+m.id]=ta.value; });
+          la.appendChild(ta); card.appendChild(la);
+        }
+      }
+      pax.appendChild(card);
+    });
+    var anyYes = party.members.some(function(m){ return (picks[m.id]||(m.answer==='Yes'?'yes':m.answer==='No'?'no':''))==='yes'; });
+    $('addrBox').classList.toggle('hidden', !anyYes); if(anyYes) $('addrBox').style.display='flex';
+    $('addrNote').classList.toggle('hidden', !party.hasAddress);
+  }
+
+  $('codeForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var c=$('codeIn').value.replace(/[^A-Za-z0-9]/g,'').toUpperCase();
+    if (c.length<6){ $('codeErr').textContent='Your code is at least 6 letters and numbers.'; return; }
+    $('codeErr').textContent=''; CODE=c; load();
+  });
+  $('againBtn').addEventListener('click', function(){ renderForm(); go('ask'); });
+  $('rsvpForm').addEventListener('input', function(){ $('err').textContent=''; });
+  $('rsvpForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var f=e.target, err=$('err');
+    if (!replier){ err.textContent='Please choose who’s replying.'; return; }
+    var answers={}, names={}, addrs={}, any=false, anyYes=false;
+    party.members.forEach(function(m){
+      if (m.own && m.id!==replier) return;
+      var c=picks[m.id]; if(!c) return; answers[m.id]=c; any=true;
+      if (c==='yes'){ anyYes=true; var i=f.querySelector('[name="n_'+m.id+'"]'); names[m.id]=i?i.value.trim():''; var t=f.querySelector('[name="sep_'+m.id+'"]'); if(t&&t.value.trim()) addrs[m.id]=t.value.trim(); }
+    });
+    if (!any){ err.textContent='Choose Wheels down or Unable for at least one person.'; return; }
+    for (var id in names){ if(!names[id]){ err.textContent='Please add a name for each person who’s coming.'; return; } }
+    var addr={street:f.street.value.trim(),city:f.city.value.trim(),state:f.state.value.trim(),zip:f.zip.value.trim(),email:f.email.value.trim(),phone:f.phone.value.trim()};
+    if (anyYes && !party.hasAddress && !(addr.street&&addr.city&&addr.state&&addr.zip&&addr.email&&addr.phone)){ err.textContent='Please fill in the mailing address, phone and email so we can send your invitation.'; return; }
+    if (addr.email && !/^\S+@\S+\.\S+$/.test(addr.email)){ err.textContent='That email doesn’t look quite right.'; return; }
+    var btn=$('submitBtn'); btn.disabled=true; btn.textContent='Filing…';
+    var payload={code:CODE, replier:replier, answers:answers, names:names, addrs:addrs, note:f.note.value};
+    for (var k in addr) payload[k]=addr[k];
+    api('POST', payload).then(function(res){
+      btn.disabled=false; btn.textContent='File my flight plan';
+      if (!res || !res.ok){ err.textContent=((res&&res.error)||'Something went wrong.')+' Please try again.'; return; }
+      party = res.party; picks={}; f.note.value='';
+      var yes = party.members.filter(function(m){ return m.answer==='Yes'; }).length;
+      $('doneTitle').textContent = yes ? 'Roger that' : 'Reply received';
+      $('doneText').textContent = yes ? 'You’re cleared for takeoff. Watch your mailbox for the formal invitation.' : 'Thank you for letting us know. Sending love from the flight deck.';
+      var dl=$('doneList'); dl.innerHTML='';
+      party.members.forEach(function(m){ dl.appendChild(el('div',null, disp(m)+': '+label(m.answer))); });
+      if (res.skipped && res.skipped.length) dl.appendChild(el('div','p-sub', res.skipped.join(', ')+' already replied for themselves, so their answer stayed the same.'));
+      go('done');
+    }).catch(function(){
+      btn.disabled=false; btn.textContent='File my flight plan';
+      err.textContent='We couldn’t connect just now. Please try again.';
+    });
+  });
+
+  if (CODE) load(); else go('code');
+})();
+</script>
+</body>
+</html>
