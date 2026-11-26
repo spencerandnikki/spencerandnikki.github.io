@@ -1,0 +1,14 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Nikki and Spencer//Wedding//EN
+BEGIN:VEVENT
+UID:nikki-spencer-wedding-20271002@spencerandnikki.com
+DTSTAMP:20261125T000000Z
+DTSTART:20271003T000000Z
+DTEND:20271003T050000Z
+SUMMARY:Nikki & Spencer’s Wedding
+LOCATION:Saratoga Springs\, 22801 Big Basin Way\, Saratoga\, CA
+DESCRIPTION:https://spencerandnikki.com
+URL:https://spencerandnikki.com
+END:VEVENT
+END:VCALENDAR
